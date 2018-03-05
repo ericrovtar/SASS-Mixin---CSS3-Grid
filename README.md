@@ -48,4 +48,8 @@ For now, this is pretty basic. I might expand it, but its intent was for basic g
 
 If you have any questions or suggestions, let me know. I'm happy to hear how you want to use this or what stops you from using it.
 
+# Honorable Mentions
+
+This solution makes use of Brian Franco's excellent <a href="https://github.com/mastastealth/sass-flex-mixin" target="_blank">flexbox mix-ins</a>. Seriously, if you're note using these to ensure legacy browser support of flexbox, you're missing out. With so many revisions to the spec, this makes it very manageable.
+
 # Happy coding
