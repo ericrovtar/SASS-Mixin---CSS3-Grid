@@ -1,0 +1,111 @@
+@import './flexbox.scss';
+
+$gutter: 12px;
+
+@mixin grid-columns($columnWidths: (50% 50%)) {
+    $numberOfColumns: length($columnWidths);
+
+    $className: unquote('col-#{$numberOfColumns}__');
+    @for $i from 1 through $numberOfColumns {
+        $width: nth($columnWidths, $i);
+
+        $str: inspect($width);
+        $index: str-index($str, '%');
+        $name: str-slice($str, 0, $index - 1);
+
+        @if $i == 1 {
+            $className: unquote('#{$className}#{$name}');
+        } @else {
+            $className: unquote('#{$className}-#{$name}');
+        }
+    }
+
+    &.#{$className} {
+        @for $i from 1 through $numberOfColumns {
+            $width: nth($columnWidths, $i);
+            $child: unquote('#{$numberOfColumns}n + #{$i}');
+
+            @if $numberOfColumns == $i {
+                $child: unquote('#{$numberOfColumns}n');
+            }
+
+            & > div:nth-child(#{$child}) {
+                width: calc(#{$width} - #{$gutter});
+            }
+        }
+
+        @supports (display: grid) {
+            grid-template-columns: #{$columnWidths};
+
+            & > div {
+                width: 100% !important;
+            }
+        }
+
+        .edge & {
+            @for $i from 1 through $numberOfColumns {
+                $width: nth($columnWidths, $i);
+                $child: unquote('#{$numberOfColumns}n + #{$i}');
+
+                @if $numberOfColumns == $i {
+                    $child: unquote('#{$numberOfColumns}n');
+                }
+    
+                & > div:nth-child(#{$child}) {
+                    width: calc(#{$width} - #{$gutter}) !important;
+                }
+            }
+        }
+    }
+}
+
+.grid {
+    // IE 11 Fallback
+    @include flexbox();
+    @include flex-flow(row wrap);
+    @include align-items(center);
+    
+    & > div {
+        // display: inline-block;
+        margin-right: $gutter;
+    }
+    
+    @supports (display: grid) {
+        display: grid;
+        
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        grid-column-gap: $gutter;
+        grid-gap: .5rem $gutter;
+        justify-items: stretch;
+        align-items: center;
+        justify-content: start;
+        align-content: start;
+    
+        // Note: To use this class, it is best to override `grid-template-columns` and `grid-template-rows` for
+        // the specific needs of the layout
+    }
+
+    // @TODO: Remove. Edge 16 (Released Oct 16, 2017) now supports Grid properly.
+    .edge & {
+        @include flexbox();
+        @include flex-flow(row wrap);
+        @include align-items(center);
+
+        & > div {
+            // display: inline-block;
+            margin-right: $gutter;
+        }
+    }
+
+    &.row-gap--half {
+        grid-row-gap: .5rem;
+    }
+    &.row-gap--none {
+        grid-row-gap: 0;
+    }
+
+    &.align-items--end {
+        @include align-items(end);
+    }
+}
